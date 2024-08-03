@@ -42,6 +42,10 @@
 		<Unit filename="Texture.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="Timer.cpp" />
+		<Unit filename="Timer.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="Variables.cpp" />
 		<Unit filename="Variables.h">
 			<Option target="&lt;{~None~}&gt;" />
