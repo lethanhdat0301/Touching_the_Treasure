@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1722704941 source:d:\gamec++\minesweeper\main.cpp
+1723139342 source:d:\gamec++\minesweeper\main.cpp
 	<iostream>
 	<ctime>
 	<stdlib.h>
@@ -32,7 +32,7 @@
 	<SDL_ttf.h>
 	<cstring>
 
-1721621583 d:\gamec++\minesweeper\constants.h
+1723138504 d:\gamec++\minesweeper\constants.h
 
 1722702853 source:d:\gamec++\minesweeper\variables.cpp
 	"Variables.h"
