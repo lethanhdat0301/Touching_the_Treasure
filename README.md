@@ -2,7 +2,7 @@
 
 A classic Minesweeper game developed using SDL2 and C++.
 
-![Gameplay Screenshot](assets/screenshot.png)
+![Gameplay Screenshot](MineSweeper/assets/screenshot.png)
 
 ## Description
 
