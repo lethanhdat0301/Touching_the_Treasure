@@ -10,7 +10,7 @@
 
 using namespace std;
 
-LButton gButtons[ROW_SIZE][COL_SIZE];
+vector<vector<LButton>> Buttons(3, vector<LButton>(2));
 LTimer timer;
 
 // Starts up SDL and creates window
@@ -19,115 +19,109 @@ bool init();
 // Loads media
 bool loadMedia();
 
-// Frees media and shuts down SDL
-void close();
+bool loadMenuMedia();
 
-// Initializes playground
 void createTableWithMine();
+
+void setButtonPosition();
+
+void handleEvent();
 
 // Check win flag
 bool checkWinning();
 
 // Render number of flag/mine left
-void mineManager();
+void mineManager(int dx);
 
 // Perform win/lose flag
-void flagManager();
+void flagManager(int dx);
 
 void timeRender(int n);
 
-void TimeManager();
+void TimeManager(int screen_width);
 
-// Perform play again flag
-void playAgainManager(bool &quitGame);
+void renderMenu();
+
+void showModeChoice();
+
+void setGameMode(int x, int y, int n, int dx, int dy, int &BOARD_SIZE_X, int &BOARD_SIZE_Y, int &NumberOfMines, int &mineCountLeft, int &CountTileLeft, int &distance_x, int &distance_y);
+
+// Frees media and shuts down SDL
+void close();
 
 int main(int argc, char *args[])
 {
-	// Start up SDL and create window
 	if (!init())
 	{
-		cout << "Failed to initialize!\n";
+		std::cout << "Failed to initialize SDL! SDL_Error: " << SDL_GetError() << std::endl;
+		return -1;
 	}
 	else
 	{
-		// Load media
 		if (!loadMedia())
 		{
-			cout << "Failed to load media!\n";
+			std::cout << "Failed to load media!" << std::endl;
+			return -1;
 		}
 		else
 		{
-			// Main loop flag
+
 			bool quit = false;
 
-			// Event handler
-			SDL_Event e;
-
-			// While application is running
-			while (!quit)
+			if (loadMenuMedia)
 			{
-				timer.start();
-				createTableWithMine();
-
-				// While game is not over yet
-				while (!gameOver && !quit && !isWinning)
+				while (!quit)
 				{
-					// Handle events on queue
-					while (SDL_PollEvent(&e) != 0)
+
+					while (mainLoop)
 					{
-						// User requests quit
-						if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE)
+
+						if (isChoosing)
 						{
-							quit = true;
+							showModeChoice();
 						}
 
-						// Handle button events
-						for (int i = 0; i < ROW_SIZE; i++)
+						while (isRunning)
 						{
-							for (int j = 0; j < COL_SIZE; j++)
+							handleEvent();
+							setButtonPosition();
+							timer.start();
+
+							while (!gameOver && !quit && !isWinning)
 							{
-								gButtons[i][j].handleEvent(&e);
+								handleEvent();
+								isWinning = checkWinning();
+
+								SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+								SDL_RenderClear(gRenderer);
+
+								SDL_Rect destRect = {0, 0, 1000, SCREEN_HEIGHT};
+								SDL_RenderCopy(gRenderer, gBackgroundTexture.getTexture(), NULL, &destRect);
+
+								for (int i = 0; i < BOARD_SIZE_X; i++)
+								{
+									for (int j = 0; j < BOARD_SIZE_Y; j++)
+									{
+										Buttons[i][j].render(i, j);
+									}
+								}
+								int width, height;
+								SDL_GetWindowSize(gWindow, &width, &height);
+
+								mineManager(width);
+								flagManager(width);
+								TimeManager(width);
+
+								SDL_RenderPresent(gRenderer);
 							}
 						}
-						isWinning = checkWinning();
 					}
-
-					// Clear screen
-					SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-					SDL_RenderClear(gRenderer);
-
-					// Render background
-					gBackgroundTexture.render(0, 0);
-
-					// Render buttons
-					for (int i = 0; i < ROW_SIZE; i++)
-					{
-						for (int j = 0; j < COL_SIZE; j++)
-						{
-							gButtons[i][j].render(i, j);
-						}
-					}
-					// Render mine/flag left
-					mineManager();
-
-					// Perform win/lose flag
-					flagManager();
-
-					// RenderTime
-					TimeManager();
-
-					// Update screen
-					SDL_RenderPresent(gRenderer);
 				}
-				// Check play again flag
-				playAgainManager(quit);
 			}
 		}
 	}
 
-	// Free resources and close SDL
 	close();
-
 	return 0;
 }
 
@@ -220,42 +214,8 @@ bool loadMedia()
 		}
 	}
 
-    gPlayAgainWin = TTF_OpenFont( "Font/DTM-Sans.ttf", 40 );
-	if( gPlayAgainWin == NULL )
-	{
-	    cout << "Failed to load DTM-Sans font! SDL_ttf Error: " << TTF_GetError() << endl;
-		success = false;
-	}
-	else
-    {
-        //Render text
-		SDL_Color playAgainWin = { 30, 100, 100 };
-		if( !gPlayAgainWinTexture.loadFromRenderedText( "Press s to play again!", playAgainWin ) )
-		{
-			cout << "Failed to render text texture!\n";
-			success = false;
-		}
-    }
-
-    gPlayAgainLose = TTF_OpenFont( "Font/DTM-Sans.ttf", 40 );
-    if( gPlayAgainLose == NULL )
-	{
-	    cout << "Failed to load DTM-Sans font! SDL_ttf Error: " << TTF_GetError() << endl;
-		success = false;
-	}
-	else
-    {
-        //Render text
-		SDL_Color playAgainLose = { 140, 140, 140 };
-		if( !gPlayAgainLoseTexture.loadFromRenderedText( "Press s to play again!", playAgainLose ) )
-		{
-			cout << "Failed to render text texture!\n";
-			success = false;
-		}
-    }
-
-
 	// Load scene
+
 	if (!gWinningTexture.loadFromFile("assets/Winner.png"))
 	{
 		cout << "Failed to load winning texture!\n";
@@ -273,6 +233,12 @@ bool loadMedia()
 		cout << "Failed to load sprites texture!\n";
 		success = false;
 	}
+
+	if (!gMenuTheme.loadFromFile("assets/menuTheme.png"))
+	{
+		cout << "Failed to load menu theme!\n";
+		success = false;
+	}
 	else
 	{
 		// Set sprites
@@ -284,13 +250,13 @@ bool loadMedia()
 			gSpriteClips[i].h = TILE_SIZE;
 		}
 		// Set buttons position
-		for (int i = 0; i < ROW_SIZE; i++)
+		/*for (int i = 0; i < ROW_SIZE; i++)
 		{
 			for (int j = 0; j < COL_SIZE; j++)
 			{
 				gButtons[i][j].setPosition(j * TILE_SIZE + DISTANCE_BETWEEN, i * TILE_SIZE + DISTANCE_BETWEEN);
 			}
-		}
+		}*/
 	}
 
 	// Load sound effects
@@ -318,46 +284,97 @@ bool loadMedia()
 	return success;
 }
 
+bool loadMenuMedia()
+{
+	bool success = true;
+	// load background of menu
+	if (!gMenuTheme.loadFromFile("//assets//menuTheme.png"))
+	{
+		printf("Fail!");
+		success = false;
+	}
+
+	return success;
+}
+
 void createTableWithMine()
 {
-	srand(time(NULL));
+	srand(time(0));
 	int mine = 0;
-	for (int i = 0; i < ROW_SIZE; i++)
+	// Initialization
+	for (int i = 0; i < BOARD_SIZE_X; i++)
 	{
-		for (int j = 0; j < COL_SIZE; j++)
+		for (int j = 0; j < BOARD_SIZE_Y; j++)
 		{
 			sBoard[i][j] = 10;
 			board[i][j] = 0;
 		}
 	}
+
+	// Random mines in board
 	while (mine < MINE_COUNT)
 	{
-		int i = rand() % ROW_SIZE;
-		int j = rand() % COL_SIZE;
+		int i = rand() % BOARD_SIZE_X;
+		int j = rand() % BOARD_SIZE_Y;
 		if (board[i][j] == 9)
-		{
 			continue;
-		}
-		else
+		board[i][j] = 9;
+		mine++;
+	}
+
+	// Calculate the number of mines around each cell
+	for (int i = 0; i < BOARD_SIZE_X; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE_Y; j++)
 		{
-			board[i][j] = 9;
-			mine++;
-			if (board[i - 1][j] != 9 && i > 0)
-				board[i - 1][j]++;
-			if (board[i][j - 1] != 9 && j > 0)
-				board[i][j - 1]++;
-			if (board[i + 1][j] != 9 && i < ROW_SIZE - 1)
-				board[i + 1][j]++;
-			if (board[i][j + 1] != 9 && j < COL_SIZE - 1)
-				board[i][j + 1]++;
-			if (board[i - 1][j - 1] != 9 && i > 0 && j > 0)
-				board[i - 1][j - 1]++;
-			if (board[i - 1][j + 1] != 9 && i > 0 && j < COL_SIZE - 1)
-				board[i - 1][j + 1]++;
-			if (board[i + 1][j - 1] != 9 && j > 0 && i < ROW_SIZE - 1)
-				board[i + 1][j - 1]++;
-			if (board[i + 1][j + 1] != 9 && i < ROW_SIZE - 1 && j < COL_SIZE - 1)
-				board[i + 1][j + 1]++;
+			if (board[i][j] == 9)
+				continue;
+			for (int x = -1; x <= 1; x++)
+			{
+				for (int y = -1; y <= 1; y++)
+				{
+					int xpos = i + x;
+					int ypos = j + y;
+					if (xpos < 0 || xpos > BOARD_SIZE_X - 1 || ypos < 0 || ypos > BOARD_SIZE_Y - 1)
+						continue;
+					if (board[xpos][ypos] == 9)
+						board[i][j]++;
+				}
+			}
+		}
+	}
+}
+
+void setButtonPosition()
+{
+	for (int i = 0; i < BOARD_SIZE_X; ++i)
+	{
+		for (int j = 0; j < BOARD_SIZE_Y; ++j)
+		{
+			Buttons[i][j].setPosition(j * TILE_SIZE + distance_y, i * TILE_SIZE + distance_x);
+		}
+	}
+}
+
+void handleEvent()
+{
+	SDL_Event e;
+	while (SDL_PollEvent(&e) != 0)
+	{
+		// User requests quit
+		if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE)
+		{
+			mainLoop = false;
+			isRunning = false;
+		}
+
+		// Handle button events
+		for (int i = 0; i < BOARD_SIZE_X; i++)
+		{
+			for (int j = 0; j < BOARD_SIZE_Y; j++)
+			{
+				Buttons[i][j].handleEvent(&e);
+			}
 		}
 	}
 }
@@ -373,7 +390,7 @@ bool checkWinning()
 	return win;
 }
 
-void mineManager()
+void mineManager(int dx)
 {
 	// Render text
 	if (!gameOver && !isWinning)
@@ -404,14 +421,15 @@ void mineManager()
 		// gCountMineLeftTexture.render((SCREEN_WIDTH - gCountMineLeftTexture.getWidth()) / 2, gMineLeftTexture.getHeight() - 10);
 
 		// Render "Mine left:" text
-		gMineLeftTexture.render(40, 0);
+		int s = dx - (gMineLeftTexture.getWidth() + 100 + gCountMineLeftTexture.getWidth());
+		gMineLeftTexture.render(s / 2, 0);
 
 		// Render countMineLeft text below "Mine left:"
-		gCountMineLeftTexture.render(110, gMineLeftTexture.getHeight() - 10);
+		gCountMineLeftTexture.render(s / 2 + gMineLeftTexture.getWidth() / 2 - gCountMineLeftTexture.getWidth() / 2, gMineLeftTexture.getHeight() - 10);
 	}
 }
 
-void flagManager()
+void flagManager(int dx)
 {
 	// Check if win
 	if (isWinning && !gameOver)
@@ -427,30 +445,27 @@ void flagManager()
 
 		// Render winning scene
 		gWinningTexture.render(0, 0);
-
-		// Render playAgain
-		gPlayAgainWinTexture.render((SCREEN_WIDTH - gPlayAgainWinTexture.getWidth()) / 2, SCREEN_HEIGHT - gPlayAgainWinTexture.getHeight());
 	}
 
 	// Check if lose
 	if (gameOver)
 	{
+
+		int s = (dx - gTextTexture.getWidth()) / 2;
 		// Render game over text
-		gTextTexture.render((SCREEN_WIDTH - gTextTexture.getWidth()) / 2, 0);
+		gTextTexture.render(s, 10);
 
 		// Play losing music
 		Mix_PlayMusic(loser, 0);
 
-		for (int i = 0; i < ROW_SIZE; i++)
+		for (int i = 0; i < BOARD_SIZE_X; i++)
 		{
-			for (int j = 0; j < COL_SIZE; j++)
+			for (int j = 0; j < BOARD_SIZE_Y; j++)
 			{
 				sBoard[i][j] = board[i][j];
-				gButtons[i][j].render(i, j);
+				Buttons[i][j].render(i, j);
 			}
 		}
-		// Render play again
-		gPlayAgainLoseTexture.render((SCREEN_WIDTH - gPlayAgainLoseTexture.getWidth()) / 2, SCREEN_HEIGHT - gPlayAgainLoseTexture.getHeight());
 	}
 }
 
@@ -470,7 +485,7 @@ std::string getTime()
 	}
 }
 
-void timeRender(int n, int xPos)
+void timeRender(int n, int xPos, int dx)
 {
 	if (!gameOver && !isWinning)
 	{
@@ -492,22 +507,25 @@ void timeRender(int n, int xPos)
 			cout << "Unable to render time texture!\n";
 		}
 
+		int s = dx - (gMineLeftTexture.getWidth() + 100 + gCountMineLeftTexture.getWidth());
+
 		// Render "Time:" text
-		gTimeText.render(300, 0);
+		gTimeText.render(s / 2 + 50 + gMineLeftTexture.getWidth(), 0);
 
 		// Render time text at the specified position
 		gTime.render(xPos, gTimeText.getHeight() - 10);
 	}
 }
 
-void TimeManager()
+void TimeManager(int screen_width)
 {
 	int n = timer.getTicks() / 1000;
-	int xPos = 340; // Starting x position for rendering digits
+	int s = screen_width - (gMineLeftTexture.getWidth() + 100 + gCountMineLeftTexture.getWidth());
+	int xPos = s / 2 + 50 + gMineLeftTexture.getWidth() + gTimeText.getWidth() / 2 - gTime.getWidth() / 2;
 
 	if (n < 10)
 	{
-		timeRender(n, xPos);
+		timeRender(n, xPos, screen_width);
 	}
 	else
 	{
@@ -524,37 +542,162 @@ void TimeManager()
 		// Render digits in correct order
 		for (int j = i - 1; j >= 0; j--)
 		{
-			timeRender(digits[j], xPos);
+			timeRender(digits[j], xPos - 10, screen_width);
 			xPos += 20; // Move x position for the next digit
 		}
 	}
 }
 
-void playAgainManager(bool &quitGame)
+void renderMenu()
 {
-	// Event handler
-	SDL_Event e;
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_RenderClear(gRenderer);
 
-	// Handle events on queue
-	while (SDL_PollEvent(&e) != 0)
+	SDL_Rect destRect;
+	destRect.x = 0;
+	destRect.y = 0;
+	destRect.w = SCREEN_WIDTH;	// Set width to screen width
+	destRect.h = SCREEN_HEIGHT; // Set height to screen height
+
+	// Render the texture to cover the entire screen
+	SDL_RenderCopy(gRenderer, gMenuTheme.getTexture(), NULL, &destRect);
+
+	SDL_Color textColor = {0, 0, 0, 255};
+	// Render "Easy" button
+	gEasyChoice.loadFromRenderedText("Easy", textColor);
+	gEasyChoice.render(75, 640);
+
+	// Render "Medium" button
+	gMediumChoice.loadFromRenderedText("Medium", textColor);
+	gMediumChoice.render(200, 640);
+
+	// Render "Hard" button
+	gHardChoice.loadFromRenderedText("Hard", textColor);
+	gHardChoice.render(375, 640);
+
+	// Render "Exit" button
+	gExitButton.loadFromRenderedText("Exit", textColor);
+	gExitButton.render(550, 640);
+}
+
+void showModeChoice()
+{
+	bool easyInside = false;
+	bool mediumInside = false;
+	bool hardInside = false;
+	bool exitInside = false;
+	renderMenu();
+
+	SDL_Event event;
+
+	while (isChoosing)
 	{
-		// User requests play again
-		if (e.key.keysym.sym == SDLK_s)
+		while (SDL_PollEvent(&event) != 0)
 		{
-			// Stop the music
-			Mix_HaltMusic();
+			if (event.type == SDL_QUIT)
+			{
+				mainLoop = false;
+				isChoosing = false;
+			}
+			if (event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN)
+			{
+				int x, y;
+				SDL_GetMouseState(&x, &y);
 
-			// Recreate constants
-			countMineLeft = MINE_COUNT;
-			countTileLeft = ROW_SIZE * COL_SIZE;
+				// Kiểm tra xem chuột có đang ở trong phạm vi các lựa chọn không
+				easyInside = (x > 75 && x < 75 + gEasyChoice.getWidth() && y > 640 && y < 640 + gEasyChoice.getHeight());
+				mediumInside = (x > 200 && x < 200 + gMediumChoice.getWidth() && y > 640 && y < 640 + gMediumChoice.getHeight());
+				hardInside = (x > 375 && x < 375 + gHardChoice.getWidth() && y > 640 && y < 640 + gHardChoice.getHeight());
+				exitInside = (x > 550 && x < 550 + gExitButton.getWidth() && y > 640 && y < 640 + gExitButton.getHeight());
 
-			// Recreate flag
-			gameOver = false;
-			isWinning = false;
-			quitGame = false;
+				if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+				{
+					if (easyInside)
+					{
+						isRunning = true;
+						isChoosing = false;
+						easy = true;
+						medium = false;
+						hard = false;
+						exitGame = false;
+						SDL_SetWindowSize(gWindow, 450, 450);
+
+						setGameMode(9, 9, 10, 90, 81, BOARD_SIZE_X, BOARD_SIZE_Y, MINE_COUNT, countMineLeft, countTileLeft, distance_x, distance_y);
+						createTableWithMine();
+					}
+					else if (mediumInside)
+					{
+						isRunning = true;
+						isChoosing = false;
+						easy = false;
+						medium = true;
+						hard = false;
+						exitGame = false;
+						SDL_SetWindowSize(gWindow, 600, 600);
+						setGameMode(12, 12, 30, 100, 108, BOARD_SIZE_X, BOARD_SIZE_Y, MINE_COUNT, countMineLeft, countTileLeft, distance_x, distance_y);
+						createTableWithMine();
+					}
+					else if (hardInside)
+					{
+						isRunning = true;
+						isChoosing = false;
+						easy = false;
+						medium = false;
+						hard = true;
+						exitGame = false;
+						SDL_SetWindowSize(gWindow, 700, 700);
+
+						setGameMode(16, 16, 50, 100, 94, BOARD_SIZE_X, BOARD_SIZE_Y, MINE_COUNT, countMineLeft, countTileLeft, distance_x, distance_y);
+						createTableWithMine();
+					}
+					else if (exitInside)
+					{
+						isRunning = false;
+						isChoosing = false;
+						easy = false;
+						medium = false;
+						hard = false;
+						exitGame = true;
+						mainLoop = false;
+
+						SDL_QUIT;
+						exit(0);
+					}
+				}
+			}
 		}
-		else if (e.key.keysym.sym == SDLK_ESCAPE)
-			quitGame = true;
+
+		// Cập nhật màn hình
+		SDL_RenderPresent(gRenderer);
+	}
+}
+
+void setGameMode(int x, int y, int n, int dx, int dy, int &BOARD_SIZE_X, int &BOARD_SIZE_Y, int &NumberOfMines, int &mineCountLeft, int &CountTileLeft, int &distance_x, int &distance_y)
+{
+	BOARD_SIZE_X = x;
+	BOARD_SIZE_Y = y;
+	NumberOfMines = n;
+	mineCountLeft = n;
+	CountTileLeft = x * y;
+	distance_x = dx;
+	distance_y = dy;
+
+	// Tính toán khoảng cách từ cạnh trái và trên của màn hình tới bảng chơi game
+
+	Buttons.resize(BOARD_SIZE_X);
+	for (int i = 0; i < BOARD_SIZE_X; i++)
+	{
+		Buttons[i].resize(BOARD_SIZE_Y);
+	}
+	sBoard.resize(BOARD_SIZE_X);
+	for (int i = 0; i < BOARD_SIZE_X; i++)
+	{
+		sBoard[i].resize(BOARD_SIZE_Y);
+	}
+	board.resize(BOARD_SIZE_X);
+	for (int i = 0; i < BOARD_SIZE_X; i++)
+	{
+		board[i].resize(BOARD_SIZE_Y);
 	}
 }
 
@@ -566,14 +709,20 @@ void close()
 	gBackgroundTexture.free();
 	gWinningTexture.free();
 	gTextTexture.free();
+	gMenuTheme.free();
+	gCountMineLeftTexture.free();
+	gTime.free();
+	gTimeText.free();
+	gMenu.free();
+	gMenu1.free();
+	gEasyChoice.free();
+	gMediumChoice.free();
+	gHardChoice.free();
+	gExitButton.free();
 
 	// Free global font
 	TTF_CloseFont(gGameOver);
-	TTF_CloseFont(gPlayAgainLose);
-	TTF_CloseFont(gPlayAgainWin);
 	gGameOver = NULL;
-	gPlayAgainLose = NULL;
-	gPlayAgainWin = NULL;
 
 	// Free the sound effects
 	Mix_FreeMusic(winner);
@@ -591,6 +740,7 @@ void close()
 
 	// Quit SDL subsystems
 	Mix_Quit();
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }

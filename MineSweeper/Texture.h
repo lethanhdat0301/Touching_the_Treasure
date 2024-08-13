@@ -29,6 +29,8 @@ public:
     int getWidth();
     int getHeight();
 
+    SDL_Texture* getTexture() const;
+
 private:
     SDL_Texture* mTexture;
 

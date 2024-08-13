@@ -2,6 +2,7 @@
 
 #include <SDL_mixer.h>
 #include <sstream>
+#include <vector>
 #include "Texture.h"
 #include "Constants.h"
 #include "Button.h"
@@ -11,6 +12,9 @@ extern SDL_Window *gWindow;
 
 // The window renderer
 extern SDL_Renderer *gRenderer;
+extern bool mainLoop;
+extern bool isRunning;
+extern bool isChoosing;
 
 // The sound effects that will be used
 extern Mix_Music *winner;
@@ -19,38 +23,53 @@ extern Mix_Chunk *click;
 
 // Globally used font
 extern TTF_Font *gGameOver;
-extern TTF_Font *gPlayAgainWin;
-extern TTF_Font *gPlayAgainLose;
 
 // Mouse button texture
 extern SDL_Rect gSpriteClips[SPRITE_TOTAL];
 extern LTexture gButtonSpriteSheetTexture;
 
 // Screen texture
+extern LTexture gMenuTheme;
 extern LTexture gWinningTexture;
 extern LTexture gBackgroundTexture;
 
 // Rendered texture
 extern LTexture gTextTexture;
 extern LTexture gMineLeftTexture;
-extern LTexture gPlayAgainWinTexture;
-extern LTexture gPlayAgainLoseTexture;
 extern LTexture gCountMineLeftTexture;
 extern LTexture gTime;
 extern LTexture gTimeText;
+extern LTexture gMenu;
+extern LTexture gMenu1;
+extern LTexture gEasyChoice;
+extern LTexture gMediumChoice;
+extern LTexture gHardChoice;
+extern LTexture gExitButton;
 
 // Gameplay variables
 extern int countMineLeft;
 extern int countTileLeft;
 extern bool gameOver;
 extern bool isWinning;
+extern bool start;
+extern bool easy;
+extern bool medium;
+extern bool hard;
+extern bool exitGame;
+extern bool showMenu;
 
 // In memory text stream
 extern stringstream mineLeft;
 extern stringstream timeText;
 
-// Board with mine
-extern int board[ROW_SIZE][COL_SIZE];
+// Distance between the board and the screen
+extern int distance_x;
+extern int distance_y;
 
-// Board for showing
-extern int sBoard[ROW_SIZE][COL_SIZE];
+// Board size
+extern int BOARD_SIZE_X;
+extern int BOARD_SIZE_Y;
+extern int MINE_COUNT;
+
+extern std::vector<std::vector<int>> sBoard;
+extern std::vector<std::vector<int>> board;
