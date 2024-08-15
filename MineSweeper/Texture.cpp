@@ -41,6 +41,7 @@ bool LTexture::loadFromFile(string path)
 		SDL_FreeSurface(loadedSurface);
 	}
 	mTexture = newTexture;
+
 	return mTexture != NULL;
 }
 

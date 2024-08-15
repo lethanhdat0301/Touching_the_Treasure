@@ -228,7 +228,7 @@ bool loadMedia()
 	}
 
 	// Load sprites
-	if (!gButtonSpriteSheetTexture.loadFromFile("assets/Tiles.png"))
+	if (!gButtonSpriteSheetTexture.loadFromFile("assets/s.jpg"))
 	{
 		cout << "Failed to load sprites texture!\n";
 		success = false;
@@ -301,6 +301,7 @@ void createTableWithMine()
 {
 	srand(time(0));
 	int mine = 0;
+	int heartCount = 1;
 	// Initialization
 	for (int i = 0; i < BOARD_SIZE_X; i++)
 	{
@@ -311,12 +312,24 @@ void createTableWithMine()
 		}
 	}
 
+	while (heartCount > 0)
+	{
+		int i = rand() % BOARD_SIZE_X;
+		int j = rand() % BOARD_SIZE_Y;
+		cout << i << " " << j << endl;
+		if (board[i][j] == 0)
+		{
+			board[i][j] = 12; // Đặt trái tim ở vị trí này
+			heartCount--;
+		}
+	}
+
 	// Random mines in board
 	while (mine < MINE_COUNT)
 	{
 		int i = rand() % BOARD_SIZE_X;
 		int j = rand() % BOARD_SIZE_Y;
-		if (board[i][j] == 9)
+		if (board[i][j] == 9 || board[i][j] == 12)
 			continue;
 		board[i][j] = 9;
 		mine++;
@@ -327,7 +340,7 @@ void createTableWithMine()
 	{
 		for (int j = 0; j < BOARD_SIZE_Y; j++)
 		{
-			if (board[i][j] == 9)
+			if (board[i][j] == 9 || board[i][j] == 12)
 				continue;
 			for (int x = -1; x <= 1; x++)
 			{
@@ -343,6 +356,21 @@ void createTableWithMine()
 			}
 		}
 	}
+
+	int cnt = 0;
+	cout << "----------------------------------" << endl;
+	for (int i = 0; i < BOARD_SIZE_X; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE_Y; j++)
+		{
+			if (board[i][j] == 9)
+				cnt++;
+			cout << board[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << "----------------------------------" << endl;
+	cout << cnt << endl;
 }
 
 void setButtonPosition()
