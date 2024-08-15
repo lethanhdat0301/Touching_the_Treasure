@@ -3,7 +3,7 @@
 
 // Tile's constants
 const int TILE_SIZE = 32;
-const int SPRITE_TOTAL = 12;
+const int SPRITE_TOTAL = 13;
 
 const int SCREEN_WIDTH = 700;
 const int SCREEN_HEIGHT = 700;

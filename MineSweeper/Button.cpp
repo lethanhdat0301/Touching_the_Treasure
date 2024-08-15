@@ -7,24 +7,55 @@ void reveal(int i, int j)
     {
         if (sBoard[i][j] == 11)
         {
-            return;
+            countMineLeft++;
         }
         sBoard[i][j] = board[i][j];
-        if (sBoard[i][j] != 9)
-            countTileLeft--;
-        if (sBoard[i][j] == 0)
+        countTileLeft--;
+
+        // Kiểm tra nếu ô chứa trái tim (giá trị 12)
+        if (sBoard[i][j] == 12)
         {
+            // Reveal 8 ô xung quanh ô có trái tim
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    int xpos = i + x;
-                    int ypos = j + y;
-                    if (xpos < 0 || xpos > BOARD_SIZE_X - 1 || ypos < 0 || ypos > BOARD_SIZE_Y - 1)
-                        continue;
-                    reveal(xpos, ypos);
+                    int newX = i + x;
+                    int newY = j + y;
+
+                    // Kiểm tra biên để tránh lỗi truy cập ngoài mảng
+                    if (newX >= 0 && newX < BOARD_SIZE_X && newY >= 0 && newY < BOARD_SIZE_Y)
+                    {
+                        if (sBoard[newX][newY] == 10 || sBoard[newX][newY] == 11)
+                        {
+                            if (board[newX][newY] == 9)
+                            {
+                                countMineLeft--;
+                            }
+                            reveal(newX, newY); // Gọi hàm reveal để mở ô này
+                        }
+                    }
                 }
             }
+        }
+        else if (sBoard[i][j] == 0) // Nếu ô là 0, tiếp tục reveal các ô liền kề
+        {
+            if (i < BOARD_SIZE_X - 1)
+                reveal(i + 1, j);
+            if (i > 0)
+                reveal(i - 1, j);
+            if (j < BOARD_SIZE_Y - 1)
+                reveal(i, j + 1);
+            if (j > 0)
+                reveal(i, j - 1);
+            if (i > 0 && j > 0)
+                reveal(i - 1, j - 1);
+            if (i < BOARD_SIZE_X - 1 && j < BOARD_SIZE_Y - 1)
+                reveal(i + 1, j + 1);
+            if (i > 0 && j < BOARD_SIZE_Y - 1)
+                reveal(i - 1, j + 1);
+            if (i < BOARD_SIZE_X - 1 && j > 0)
+                reveal(i + 1, j - 1);
         }
     }
 }
@@ -88,29 +119,29 @@ void LButton::handleEvent(SDL_Event *e)
                 {
                 case SDL_BUTTON_LEFT:
                 {
-                    reveal(i, j);
-                    if (board[i][j] == 9)
+                    if (sBoard[i][j] != 9)
                     {
-                        gameOver = true;
+                        reveal(i, j);
+                        if (board[i][j] == 9)
+                        {
+                            gameOver = true;
+                        }
                     }
                     break;
                 }
                 case SDL_BUTTON_RIGHT:
                 {
-                    if (sBoard[i][j] >= 10)
+                    if (sBoard[i][j] == 10)
                     {
-                        if (sBoard[i][j] == 10)
-                        {
-                            if (countMineLeft == 0)
-                                break;
-                            sBoard[i][j] = 11;
-                            countMineLeft--;
-                        }
-                        else
-                        {
-                            sBoard[i][j] = 10;
-                            countMineLeft++;
-                        }
+                        if (countMineLeft == 0)
+                            break;
+                        sBoard[i][j] = 11;
+                        countMineLeft--;
+                    }
+                    else if (sBoard[i][j] == 11)
+                    {
+                        sBoard[i][j] = 10;
+                        countMineLeft++;
                     }
                     break;
                 }
