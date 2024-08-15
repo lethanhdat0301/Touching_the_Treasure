@@ -1,5 +1,9 @@
 # depslib dependency file v1.0
+<<<<<<< HEAD
 1723743332 source:d:\gamec++\minesweeper\main.cpp
+=======
+1723739125 source:d:\gamec++\minesweeper\main.cpp
+>>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
 	<iostream>
 	<ctime>
 	<stdlib.h>
@@ -10,11 +14,19 @@
 	"Variables.h"
 	"Timer.h"
 
+<<<<<<< HEAD
 1723743332 source:d:\gamec++\minesweeper\button.cpp
 	<ctime>
 	"Button.h"
 
 1723743332 d:\gamec++\minesweeper\button.h
+=======
+1723741938 source:d:\gamec++\minesweeper\button.cpp
+	<ctime>
+	"Button.h"
+
+1723736435 d:\gamec++\minesweeper\button.h
+>>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
 	"Variables.h"
 	"Constants.h"
 
@@ -33,12 +45,20 @@
 	<SDL_ttf.h>
 	<cstring>
 
+<<<<<<< HEAD
 1723743332 d:\gamec++\minesweeper\constants.h
+=======
+1723737028 d:\gamec++\minesweeper\constants.h
+>>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
 
 1723572620 source:d:\gamec++\minesweeper\variables.cpp
 	"Variables.h"
 
+<<<<<<< HEAD
 1723743332 source:d:\gamec++\minesweeper\texture.cpp
+=======
+1723736768 source:d:\gamec++\minesweeper\texture.cpp
+>>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
 	"Texture.h"
 	"Variables.h"
 
