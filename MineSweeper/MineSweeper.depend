@@ -1,9 +1,7 @@
 # depslib dependency file v1.0
-<<<<<<< HEAD
-1723743332 source:d:\gamec++\minesweeper\main.cpp
-=======
-1723739125 source:d:\gamec++\minesweeper\main.cpp
->>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
+140734297855626 <<<<<<< HEAD
+
+1723915242 source:d:\gamec++\minesweeper\main.cpp
 	<iostream>
 	<ctime>
 	<stdlib.h>
@@ -13,24 +11,34 @@
 	"Constants.h"
 	"Variables.h"
 	"Timer.h"
+	"function.h"
 
-<<<<<<< HEAD
-1723743332 source:d:\gamec++\minesweeper\button.cpp
+1723736768 1a31ad83718e4146e4c58ed5a4dd5013880bd
+	<iostream>
+	<ctime>
+	<stdlib.h>
+	<sstream>
+	<string>
+	"Texture.h"
+	"Constants.h"
+	"Variables.h"
+	"Timer.h"
+	"Variables.h"
+	"Constants.h"
+	"Texture.h"
+	"Variables.h"
+
+1723572620 D
+
+1723915245 source:d:\gamec++\minesweeper\button.cpp
 	<ctime>
 	"Button.h"
 
-1723743332 d:\gamec++\minesweeper\button.h
-=======
-1723741938 source:d:\gamec++\minesweeper\button.cpp
-	<ctime>
-	"Button.h"
-
-1723736435 d:\gamec++\minesweeper\button.h
->>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
+1723915246 d:\gamec++\minesweeper\button.h
 	"Variables.h"
 	"Constants.h"
 
-1723572619 d:\gamec++\minesweeper\variables.h
+1723915247 d:\gamec++\minesweeper\variables.h
 	<SDL_mixer.h>
 	<sstream>
 	<vector>
@@ -45,20 +53,12 @@
 	<SDL_ttf.h>
 	<cstring>
 
-<<<<<<< HEAD
-1723743332 d:\gamec++\minesweeper\constants.h
-=======
-1723737028 d:\gamec++\minesweeper\constants.h
->>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
+1723915244 d:\gamec++\minesweeper\constants.h
 
-1723572620 source:d:\gamec++\minesweeper\variables.cpp
+1723915248 source:d:\gamec++\minesweeper\variables.cpp
 	"Variables.h"
 
-<<<<<<< HEAD
-1723743332 source:d:\gamec++\minesweeper\texture.cpp
-=======
-1723736768 source:d:\gamec++\minesweeper\texture.cpp
->>>>>>> 95f1a31ad83718e4146e4c58ed5a4dd5013880bd
+1723915248 source:d:\gamec++\minesweeper\texture.cpp
 	"Texture.h"
 	"Variables.h"
 
@@ -67,4 +67,19 @@
 
 1722679598 d:\gamec++\minesweeper\timer.h
 	<SDL.h>
+
+1723915275 d:\gamec++\minesweeper\function.h
+	"Timer.h"
+	<SDL.h>
+	<iostream>
+	<ctime>
+	<stdlib.h>
+	<sstream>
+	<string>
+	"Texture.h"
+	"Constants.h"
+	"Variables.h"
+
+1723915273 source:d:\gamec++\minesweeper\function.cpp
+	"function.h"
 

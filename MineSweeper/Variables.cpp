@@ -40,6 +40,8 @@ LTexture gEasyChoice;
 LTexture gMediumChoice;
 LTexture gHardChoice;
 LTexture gExitButton;
+LTexture gHomeButton;
+LTexture gTextTime;
 
 // Gameplay variables
 int countMineLeft = MINE_COUNT;
@@ -51,6 +53,7 @@ bool medium = false;
 bool hard = false;
 bool exitGame = false;
 bool showMenu = true;
+bool hardMode = false;
 
 // In memory text stream
 stringstream mineLeft;
@@ -67,9 +70,3 @@ extern int MINE_COUNT = 0;
 
 extern std::vector<std::vector<int>> sBoard(3, std::vector<int>(2, 0));
 extern std::vector<std::vector<int>> board(3, std::vector<int>(2, 0));
-
-// Board with mine
-/*int board[ROW_SIZE][COL_SIZE];
-
-// Board for showing
-int sBoard[ROW_SIZE][COL_SIZE];*/

@@ -45,6 +45,8 @@ extern LTexture gEasyChoice;
 extern LTexture gMediumChoice;
 extern LTexture gHardChoice;
 extern LTexture gExitButton;
+extern LTexture gHomeButton;
+extern LTexture gTextTime;
 
 // Gameplay variables
 extern int countMineLeft;
@@ -57,6 +59,7 @@ extern bool medium;
 extern bool hard;
 extern bool exitGame;
 extern bool showMenu;
+extern bool hardMode;
 
 // In memory text stream
 extern stringstream mineLeft;

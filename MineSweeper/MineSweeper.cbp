@@ -50,6 +50,10 @@
 		<Unit filename="Variables.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="function.cpp" />
+		<Unit filename="function.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
