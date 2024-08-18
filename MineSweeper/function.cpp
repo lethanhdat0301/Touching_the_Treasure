@@ -668,7 +668,7 @@ void updateTimer()
 		if (remainingTime <= 0)
 		{
 			remainingTime = 0;
-			timerRunning = false; // Dừng đồng hồ khi thời gian kết thúc
+			timerRunning = false;
 		}
 	}
 }
@@ -706,6 +706,8 @@ void renderTime(int dx)
 		SDL_DestroyTexture(textTexture);
 	}
 }
+
+
 
 void close()
 {

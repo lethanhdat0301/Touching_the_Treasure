@@ -53,6 +53,7 @@ void updateTimer();
 
 void renderTime(int dx);
 
+
 // Frees media and shuts down SDL
 void close();
 

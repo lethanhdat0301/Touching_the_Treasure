@@ -1,7 +1,7 @@
 # depslib dependency file v1.0
 140734297855626 <<<<<<< HEAD
 
-1723915242 source:d:\gamec++\minesweeper\main.cpp
+1723994316 source:d:\gamec++\minesweeper\main.cpp
 	<iostream>
 	<ctime>
 	<stdlib.h>
@@ -68,7 +68,7 @@
 1722679598 d:\gamec++\minesweeper\timer.h
 	<SDL.h>
 
-1723915275 d:\gamec++\minesweeper\function.h
+1723994316 d:\gamec++\minesweeper\function.h
 	"Timer.h"
 	<SDL.h>
 	<iostream>
@@ -80,6 +80,6 @@
 	"Constants.h"
 	"Variables.h"
 
-1723915358 source:d:\gamec++\minesweeper\function.cpp
+1723994316 source:d:\gamec++\minesweeper\function.cpp
 	"function.h"
 
