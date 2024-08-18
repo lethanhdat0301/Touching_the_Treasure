@@ -92,9 +92,11 @@ Chỉ cần click vào tất cả các ô mà bạn nghĩ rằng ô đó không 
 - Xử lý thời gian thực, thao tác chuột, âm thanh, hình ảnh và bàn phím.
 
 ## Các nguồn tham khảo
-[Lazyfoo](https://lazyfoo.net/tutorials/SDL/index.php)
-[SDL Game Development](https://www.packtpub.com/en-us/product/sdl-game-development-9781849696821)
-[Github-MineSweeper](https://github.com/thanhtvt/minesweeperSDL/tree/Minesweeper-(so-called)/Minesweeper_with_SDL)
+- [Lazyfoo](https://lazyfoo.net/tutorials/SDL/index.php)
+  
+- [SDL Game Development](https://www.packtpub.com/en-us/product/sdl-game-development-9781849696821)
+  
+- [Github-MineSweeper](https://github.com/thanhtvt/minesweeperSDL/tree/Minesweeper-(so-called)/Minesweeper_with_SDL)
 
 ## Contact:
 22028189@vnu.edu.vn
