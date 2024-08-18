@@ -9,7 +9,7 @@
 
 ## Video Demo Game
 
-Xem video demo tại [YouTube]().
+Xem video demo tại [YouTube](https://youtu.be/yNxxtPVeqOw).
 
 ## Giới thiệu game
 Minesweeper (Dò Mìn) là một trò chơi cổ điển và đơn giản nhưng đầy thách thức, ra đời từ những năm đầu của thập kỷ 90. Đây là một trò chơi trí tuệ, yêu cầu người chơi phải sử dụng tư duy logic để tìm ra vị trí của tất cả các quả mìn ẩn trong một lưới ô vuông mà không để chúng phát nổ.
@@ -73,15 +73,15 @@ Chỉ cần click vào tất cả các ô mà bạn nghĩ rằng ô đó không 
 
 ## Một vài hình ảnh từ game
 - Khi gameover:
-- 
+  
 ![gameover](MineSweeper/assets/5.png)
 
 -  Hình ảnh khi đang chơi:
--  
+  
 ![isPlaying](MineSweeper/assets/6.png)
 
 -  Hình ảnh khi chiến thắng:
--  
+  
 ![isWinning](MineSweeper/assets/Winner.png)
 
 ## Các kỹ thuật được sử dụng
