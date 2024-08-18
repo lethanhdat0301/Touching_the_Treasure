@@ -74,10 +74,12 @@ Chỉ cần click vào tất cả các ô mà bạn nghĩ rằng ô đó không 
 ## Một vài hình ảnh từ game
 - Khi gameover:
 ![gameover](MineSweeper/assets/5.png)
+
 -  Hình ảnh khi đang chơi:
 ![isPlaying](MineSweeper/assets/6.png)
+
 -  Hình ảnh khi chiến thắng:
-![isWinning](MineSweeper/assets/winner.png)
+![isWinning](MineSweeper/assets/Winner.png)
 
 ## Các kỹ thuật được sử dụng
 - Thư viện SLD2,SLD2_image,SLD2_ttf,SDL2_mixer.
